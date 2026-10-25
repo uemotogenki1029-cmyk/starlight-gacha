@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STARLIGHT GACHA</title>
+<style>
+:root {
+  --site-primary: #8b5cf6;
+  --site-secondary: #ec4899;
+  --site-background: #0b1026;
+  --site-on-primary: #ffffff;
+  --site-on-secondary: #ffffff;
+  --site-on-background: #f8f7ff;
+  --site-font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: ui-sans-serif, system-ui, sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: #0b1026; color: #f8f7ff; }
+#app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); overflow: hidden; position: relative; }
+#app:before { content:""; position:absolute; inset:0; pointer-events:none; opacity:var(--site-decoration-opacity); background: radial-gradient(circle at 12% 5%, #7639cf55, transparent 28%), radial-gradient(circle at 92% 24%, #e83b9a33, transparent 30%), radial-gradient(circle at 50% 95%, #1b75e533, transparent 36%); }
+.wrap { position:relative; max-width:1120px; margin:auto; padding:28px 20px 60px; }
+.topline { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#c6c5ed; font-size:12px; letter-spacing:.18em; text-transform:uppercase; }
+.logo { display:flex; align-items:center; gap:9px; font-weight:900; color:#fff; letter-spacing:.1em; }
+.logo-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg,#a78bfa,#ec4899); box-shadow:0 0 25px #a78bfa66; }
+.pill { border:1px solid #ffffff25; background:#ffffff0c; border-radius:999px; padding:8px 12px; letter-spacing:.03em; }
+.hero { text-align:center; padding:42px 0 22px; }
+.eyebrow { color:#f9a8d4; font-size:12px; font-weight:800; letter-spacing:.3em; }
+h1 { font-family:var(--site-font-heading); font-size:clamp(38px,7vw,72px); line-height:1.02; margin:14px 0; letter-spacing:-.05em; text-shadow:0 0 35px #a78bfa66; }
+h1 span { background:linear-gradient(90deg,#c4b5fd,#f9a8d4,#fde68a); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.subtitle { color:#b9bddc; max-width:580px; margin:0 auto; line-height:1.7; font-size:14px; }
+.layout { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:20px; align-items:start; margin-top:24px; }
+.panel { border:1px solid #ffffff20; border-radius:24px; background:linear-gradient(150deg,#191d3cdd,#11152beF); box-shadow:0 18px 55px #0003; padding:22px; backdrop-filter:blur(12px); }
+.panel-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 16px; font-size:15px; }
+.small { font-size:12px; color:#aeb4d7; }
+.summon-stage { min-height:320px; border-radius:20px; position:relative; overflow:hidden; display:grid; place-items:center; background:radial-gradient(ellipse at center,#3d2874 0%,#171a3d 45%,#0e132a 100%); border:1px solid #a78bfa44; }
+.summon-stage:before { content:""; position:absolute; inset:-20%; background:repeating-conic-gradient(from 0deg at 50% 50%,#ffffff00 0deg,#ffffff0a 5deg,#ffffff00 10deg); animation:rotate 35s linear infinite; }
+.stars { position:absolute; inset:0; background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#f9a8d4 1px,transparent 1.5px); background-size:47px 47px,73px 73px; background-position:0 0,19px 22px; opacity:.45; }
+.orb { width:150px; height:150px; border-radius:50%; position:relative; z-index:1; display:grid; place-items:center; background:radial-gradient(circle at 35% 30%,#fff 0,#f9a8d4 7%,#a78bfa 25%,#4930a0 58%,#16163e 72%); border:2px solid #f5d0fe; box-shadow:0 0 20px #c4b5fd,0 0 70px #8b5cf6aa,inset 0 0 28px #fff8; animation:float 3s ease-in-out infinite; }
+.orb span { font-size:48px; filter:drop-shadow(0 0 15px white); }
+.stage-copy { z-index:1; position:absolute; bottom:22px; text-align:center; font-size:11px; letter-spacing:.24em; color:#d9d6ff; }
+.stage-copy strong { display:block; font-size:18px; letter-spacing:.08em; color:white; margin-bottom:6px; }
+.controls { display:flex; gap:10px; margin-top:16px; }
+button { cursor:pointer; font:inherit; color:white; border:0; transition:transform .15s,filter .15s; }
+button:hover { filter:brightness(1.12); transform:translateY(-1px); }
+button:active { transform:scale(.98); }
+.primary { flex:1; border-radius:14px; padding:15px 16px; font-weight:900; letter-spacing:.04em; background:linear-gradient(100deg,#8b5cf6,#d946ef 60%,#ec4899); box-shadow:0 8px 28px #a855f755; }
+.secondary { border:1px solid #ffffff25; border-radius:14px; padding:13px 14px; background:#ffffff0d; }
+.primary:disabled { opacity:.5; cursor:wait; }
+.result { display:none; margin-top:16px; border:1px solid #f9a8d488; background:linear-gradient(130deg,#6d28d922,#db277722); border-radius:18px; padding:16px; text-align:center; animation:pop .45s ease both; }
+.result.show { display:block; }
+.result img { width:100px; height:120px; object-fit:cover; border-radius:12px; border:1px solid #ffffff55; }
+.result .rarity { color:#f9a8d4; font-weight:900; letter-spacing:.18em; font-size:12px; margin:7px 0; }
+.result h3 { margin:4px 0; font-size:22px; }
+.result p { color:#d3d4ef; font-size:12px; margin:6px 0 0; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:15px; }
+.stat { padding:12px 8px; text-align:center; background:#ffffff08; border:1px solid #ffffff12; border-radius:13px; }
+.stat strong { display:block; font-size:19px; }
+.stat span { color:#aeb4d7; font-size:10px; }
+.section-label { margin:22px 0 10px; font-size:12px; letter-spacing:.15em; color:#c4b5fd; font-weight:800; }
+.pool { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.card { position:relative; min-width:0; padding:8px; border-radius:14px; background:#ffffff08; border:1px solid #ffffff16; }
+.card img { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:9px; background:#25234c; }
+.card h4 { margin:8px 0 4px; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card small { font-size:10px; color:#c4b5fd; }
+.r-tag { position:absolute; top:13px; left:13px; padding:4px 6px; font-size:9px; font-weight:900; border-radius:7px; background:#17152bdc; border:1px solid #ffffff35; }
+.settings label { display:block; font-size:12px; color:#c9cbed; margin:12px 0 6px; }
+input,select { width:100%; padding:11px 12px; border:1px solid #ffffff25; border-radius:10px; color:white; background:#10142c; outline:none; font:inherit; }
+input[type="file"] { font-size:11px; padding:8px; }
+input[type="number"] { max-width:120px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.add-btn { margin-top:12px; width:100%; border-radius:11px; padding:12px; background:#ffffff12; border:1px solid #ffffff28; font-weight:800; }
+.prob-list { display:grid; gap:9px; }
+.prob-row { display:grid; grid-template-columns:42px 1fr 52px; align-items:center; gap:9px; font-size:12px; }
+.prob-row input { padding:8px; }
+.prob-row .color { width:10px;height:10px;border-radius:50%;background:var(--c); box-shadow:0 0 12px var(--c); }
+.note { margin-top:14px; color:#8f96bf; font-size:11px; line-height:1.7; }
+.history { display:flex; flex-wrap:wrap; gap:6px; min-height:30px; }
+.history span { font-size:11px; border-radius:8px; padding:7px 9px; background:#ffffff0b; border:1px solid #ffffff15; }
+.toast { min-height:18px; margin-top:9px; color:#f9a8d4; font-size:12px; }
+footer { position:relative; text-align:center; padding:26px 0 0; color:#737ba7; font-size:11px; }
+@keyframes rotate { to { transform:rotate(360deg); } }
+@keyframes float { 0%,100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-8px) scale(1.035); } }
+@keyframes pop { from { transform:scale(.7); opacity:0; } to { transform:scale(1); opacity:1; } }
+.summoning .orb { animation:burst 1.2s ease-in-out infinite; }
+.summoning .summon-stage { box-shadow:inset 0 0 80px #ec4899aa; }
+@keyframes burst { 0%,100% { transform:scale(.92); filter:brightness(1); } 50% { transform:scale(1.13); filter:brightness(1.8); } }
+@media(max-width:780px) { .wrap {padding:20px 14px 40px;} .layout {grid-template-columns:1fr;} .hero {padding-top:34px;} .summon-stage {min-height:290px;} .panel {padding:16px;} }
+@media(max-width:360px) { .pool {grid-template-columns:repeat(2,1fr);} .topline {font-size:10px;} .pill {padding:7px 8px;} }
+</style>
+</head>
+<body>
+<div id="app" data-sites-preview-theme>
+  <main class="wrap">
+    <div class="topline"><div class="logo"><span class="logo-mark">✦</span> STARLIGHT GACHA</div><span class="pill">✧ YOUR OWN UNIVERSE ✧</span></div>
+    <header class="hero">
+      <div class="eyebrow">DESTINY IS CALLING</div>
+      <h1>FIND YOUR <span>STAR.</span></h1>
+      <p class="subtitle">光の向こうに、運命の推しが待っている。<br>ボタンを押して、あなただけの奇跡を引き当てよう。</p>
+    </header>
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-title"><span>✦ SUMMONING GATE</span><span class="small">PICK YOUR DESTINY</span></div>
+        <div class="summon-stage" id="stage">
+          <div class="stars"></div>
+          <div class="orb"><span id="orbIcon">✦</span></div>
+          <div class="stage-copy"><strong id="stageTitle">星の召喚陣</strong><span id="stageSub">YOUR NEXT FAVORITE IS HERE</span></div>
+        </div>
+        <div class="controls">
+          <button class="primary" id="drawBtn">✧ ガチャを引く ✧</button>
+          <button class="secondary" id="tenBtn">10連</button>
+        </div>
+        <div class="result" id="result" aria-live="polite"></div>
+        <div class="stats">
+          <div class="stat"><strong id="drawCount">0</strong><span>総召喚数</span></div>
+          <div class="stat"><strong id="ssrCount">0</strong><span>SSR獲得</span></div>
+          <div class="stat"><strong id="rateDisplay">5%</strong><span>SSR設定確率</span></div>
+        </div>
+        <div class="section-label">RECENT SUMMONS / 最近の結果</div>
+        <div class="history" id="history"><span>まだ召喚履歴がありません</span></div>
+        <p class="note">※ サンプル版です。結果はこのページ内で抽選されます。ページを閉じると履歴はリセットされます。</p>
+      </section>
+      <aside class="panel settings">
+        <div class="panel-title"><span>✧ ガチャをカスタマイズ</span><span class="small">EDIT YOUR POOL</span></div>
+        <div class="section-label" style="margin-top:0">レア度ごとの排出確率</div>
+        <div class="prob-list">
+          <div class="prob-row"><span class="color" style="--c:#facc15"></span><span>SSR / ★★★★★</span><input id="pSSR" type="number" min="0" max="100" value="5" aria-label="SSR確率"><span>%</span></div>
+          <div class="prob-row"><span class="color" style="--c:#c084fc"></span><span>SR / ★★★★</span><input id="pSR" type="number" min="0" max="100" value="20" aria-label="SR確率"><span>%</span></div>
+          <div class="prob-row"><span class="color" style="--c:#60a5fa"></span><span>R / ★★★</span><input id="pR" type="number" min="0" max="100" value="75" aria-label="R確率"><span>%</span></div>
+        </div>
+        <p class="note" id="probNote">合計100%になるように設定してね。</p>
+        <div class="section-label">景品・キャラクターを追加</div>
+        <label for="charName">キャラクター名</label><input id="charName" maxlength="50" placeholder="例：星乃ルナ">
+        <div class="form-row">
+          <div><label for="charRarity">レア度</label><select id="charRarity"><option value="SSR">SSR</option><option value="SR">SR</option><option value="R" selected>R</option></select></div>
+          <div><label for="charImage">画像を登録</label><input id="charImage" type="file" accept="image/*"></div>
+        </div>
+        <button class="add-btn" id="addBtn">＋ 景品を追加する</button>
+        <div class="toast" id="toast" role="status"></div>
+        <p class="note">画像はこのブラウザ内で読み込まれます。公開サイトに画像を保存・共有する機能はまだありません。</p>
+        <div class="section-label">YOUR CHARACTER POOL</div>
+        <div class="pool" id="pool"></div>
+        <button class="add-btn" id="resetBtn">サンプル設定に戻す</button>
+      </aside>
+    </div>
+    <footer>MADE OF STARS ✦ FRIENDS, FANDOM & A LITTLE LUCK</footer>
+  </main>
+</div>
+<script>
+const samples = [
+ {id:1,name:"星乃 ルナ",rarity:"SSR",emoji:"🌙",color:"#7c3aed",desc:"月光をまとう、運命のスター"},
+ {id:2,name:"天音 セラ",rarity:"SSR",emoji:"🪽",color:"#db2777",desc:"奇跡を歌う光の歌姫"},
+ {id:3,name:"紫藤 ミオ",rarity:"SR",emoji:"💜",color:"#9333ea",desc:"夜空に咲くミステリアスな花"},
+ {id:4,name:"花咲 ココ",rarity:"SR",emoji:"🌸",color:"#ec4899",desc:"笑顔を届けるハッピーガール"},
+ {id:5,name:"星くず ハル",rarity:"R",emoji:"⭐",color:"#2563eb",desc:"今日も元気なムードメーカー"},
+ {id:6,name:"白雪 ユキ",rarity:"R",emoji:"❄️",color:"#0891b2",desc:"涼やかな風を運ぶスノープリンセス"}
+];
+let items = samples.map(x=>({...x}));
+let draws=0, ssr=0, busy=false, history=[];
+const $ = id=>document.getElementById(id);
+const colors={SSR:"#facc15",SR:"#c084fc",R:"#60a5fa"};
+function art(item) {
+ if(item.image) return item.image;
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${item.color||colors[item.rarity]}"/><stop offset="1" stop-color="#10152e"/></linearGradient></defs><rect width="240" height="300" rx="20" fill="url(#g)"/><circle cx="120" cy="115" r="76" fill="#ffffff" opacity=".12"/><circle cx="120" cy="115" r="58" fill="none" stroke="#ffffff" opacity=".3"/><text x="120" y="144" font-size="76" text-anchor="middle">${item.emoji||"✦"}</text><text x="120" y="235" fill="white" font-size="18" text-anchor="middle" font-family="sans-serif">${item.name.slice(0,12)}</text><text x="120" y="265" fill="${colors[item.rarity]}" font-size="14" font-weight="bold" text-anchor="middle" font-family="sans-serif">${item.rarity} ★</text></svg>`;
+ return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
+}
+function renderPool(){
+ $("pool").innerHTML="";
+ items.forEach(item=>{
+  const card=document.createElement("div"); card.className="card";
+  const img=document.createElement("img"); img.src=art(item); img.alt=item.name;
+  const tag=document.createElement("span"); tag.className="r-tag"; tag.textContent=item.rarity;
+  const name=document.createElement("h4"); name.textContent=item.name;
+  const small=document.createElement("small"); small.textContent=item.rarity+" · "+(item.desc||"オリジナルキャラクター");
+  card.append(tag,img,name,small); $("pool").append(card);
+ });
+}
+function getProb(){
+ const vals={SSR:Number($("pSSR").value),SR:Number($("pSR").value),R:Number($("pR").value)};
+ const sum=vals.SSR+vals.SR+vals.R;
+ $("probNote").textContent = sum===100 ? "確率設定OK！合計100%です。" : `現在の合計：${sum}%（100%にしてね）`;
+ $("probNote").style.color=sum===100?"#86efac":"#f9a8d4";
+ $("rateDisplay").textContent=(Number.isFinite(vals.SSR)?vals.SSR:0)+"%";
+ return sum===100 && Object.values(vals).every(v=>Number.isFinite(v)&&v>=0&&v<=100)?vals:null;
+}
+["pSSR","pSR","pR"].forEach(id=>$(id).addEventListener("input",getProb));
+function pick(){
+ const p=getProb(); if(!p) return null;
+ const roll=Math.random()*100;
+ const rarity=roll<p.SSR?"SSR":roll<p.SSR+p.SR?"SR":"R";
+ const pool=items.filter(x=>x.rarity===rarity);
+ if(!pool.length) return {empty:true,rarity};
+ return pool[Math.floor(Math.random()*pool.length)];
+}
+function showResult(item){
+ const result=$("result"); result.classList.add("show");
+ if(item.empty){
+  result.innerHTML=`<div class="rarity">${item.rarity} POOL EMPTY</div><h3>景品が登録されていません</h3><p>${item.rarity}の景品を追加してね。</p>`;
+ } else {
+  result.innerHTML="";
+  const img=document.createElement("img"); img.src=art(item); img.alt=item.name;
+  const rarity=document.createElement("div"); rarity.className="rarity"; rarity.textContent=item.rarity+" · ★"+({SSR:"★★★★★",SR:"★★★★",R:"★★★"}[item.rarity]);
+  const title=document.createElement("h3"); title.textContent=item.name;
+  const desc=document.createElement("p"); desc.textContent=item.desc||"新しい推しとの出会い！";
+  result.append(img,rarity,title,desc);
+ }
+}
+async function draw(n=1){
+ if(busy)return;
+ if(!getProb()){ $("toast").textContent="確率の合計を100%にしてね。"; return; }
+ busy=true; $("drawBtn").disabled=true; $("tenBtn").disabled=true; $("result").classList.remove("show");
+ $("stage").classList.add("summoning"); $("stageTitle").textContent="星の扉が開く…"; $("stageSub").textContent="SUMMONING YOUR DESTINY";
+ $("orbIcon").textContent="✧"; $("toast").textContent="";
+ await new Promise(r=>setTimeout(r,n===1?1150:800));
+ const results=[];
+ for(let i=0;i<n;i++){ const item=pick(); if(!item)break; results.push(item); draws++; if(item.rarity==="SSR"&&!item.empty)ssr++; history.unshift(item.empty?`${item.rarity} 景品なし`:`${item.rarity} ${item.name}`); }
+ history=history.slice(0,8); $("drawCount").textContent=draws; $("ssrCount").textContent=ssr;
+ $("stage").classList.remove("summoning"); $("stageTitle").textContent=results.some(x=>x.rarity==="SSR"&&!x.empty)?"LEGENDARY!!":"召喚成功！"; $("stageSub").textContent="A NEW STAR HAS ARRIVED"; $("orbIcon").textContent=results.some(x=>x.rarity==="SSR"&&!x.empty)?"🌟":"✦";
+ $("history").innerHTML=""; history.forEach(t=>{const s=document.createElement("span");s.textContent=t;$("history").append(s);});
+ if(n===1) showResult(results[0]);
+ else {
+  const result=$("result"); result.classList.add("show"); result.innerHTML="";
+  const heading=document.createElement("h3"); heading.textContent="10連召喚結果"; result.append(heading);
+  const grid=document.createElement("div"); grid.style.cssText="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:12px;";
+  results.forEach(item=>{const img=document.createElement("img");img.src=item.empty?art({name:"?",rarity:item.rarity,emoji:"❔"}):art(item);img.alt=item.name||"景品なし";img.style.cssText="width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:8px;";img.title=item.name||"景品なし";grid.append(img);});
+  result.append(grid);
+ }
+ busy=false; $("drawBtn").disabled=false; $("tenBtn").disabled=false;
+}
+$("drawBtn").addEventListener("click",()=>draw(1));
+$("tenBtn").addEventListener("click",()=>draw(10));
+$("addBtn").addEventListener("click",()=>{
+ const name=$("charName").value.trim(), file=$("charImage").files[0], rarity=$("charRarity").value;
+ if(!name){$("toast").textContent="キャラクター名を入力してね。";return;}
+ const add=imageData=>{items.push({id:Date.now()+Math.random(),name,rarity,emoji:"✨",color:colors[rarity],desc:"登録したオリジナルキャラクター",image:imageData});renderPool();$("charName").value="";$("charImage").value="";$("toast").textContent=`「${name}」を景品プールに追加しました！`;};
+ if(file){if(!file.type.startsWith("image/")){$("toast").textContent="画像ファイルを選んでね。";return;} if(file.size>3*1024*1024){$("toast").textContent="画像は3MB以下にしてね。";return;} const reader=new FileReader();reader.onload=()=>add(reader.result);reader.readAsDataURL(file);}
+ else add(null);
+});
+$("resetBtn").addEventListener("click",()=>{
+ items=samples.map(x=>({...x}));draws=0;ssr=0;history=[];
+ $("pSSR").value=5;$("pSR").value=20;$("pR").value=75;
+ $("drawCount").textContent="0";$("ssrCount").textContent="0";$("history").innerHTML="<span>まだ召喚履歴がありません</span>";$("result").classList.remove("show");$("toast").textContent="サンプル設定に戻しました。";renderPool();getProb();
+});
+renderPool();getProb();
+</script>
+</body>
+</html>
